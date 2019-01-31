@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="GY-953" id="gy953" type="gyro" version="1" schemaversion="1">
+    <description>
+        %in_co_gy953_desc
+    </description>
+    <connections>
+        <pin name="INT" type="interrupt" />
+        <spi />
+    </connections>
+    <parameters>
+    </parameters>
+    <libraries>
+        <library>GY953.h</library>
+    </libraries>
+    <macros>
+        <macro name="gyro_update">#define gyro_update() {gyro.update();}</macro>
+        <macro name="gyro_getAngles">#define gyro_getRPY() {gyro.getRPY(angles);}</macro>
+        <macro name="gyro_getAngleRates">#define gyro_getGYR() {gyro.getGYR(angleRates);}</macro>
+        <macro name="gyro_getAccelerations">#define gyro_getACC() {gyro.getACC(accelerations);}</macro>
+    </macros>
+    <globalvariables>
+        <variable name="angles">int16_t angles[3];</variable>
+        <variable name="angleRates">int16_t angleRates[3];</variable>
+        <variable name="accelerations">int16_t accelerations[3];</variable>
+        <variable name="gyro">GY953 gyro = GY953(CS, INT);</variable>
+        <variable name="updatedGyro">bool updatedGyro = false;</variable>
+    </globalvariables>
+    <functions>
+        
+    </functions>
+    <code>
+        <part name="setup">
+gyro.setRefreshRate(100);
+gyro.begin();
+        </part>
+        <part name="init">
+gyro.fillHistory();
+        </part>
+        <part name="loopEnd">
+updatedGyro = false;
+        </part>
+        <part name="delay">
+if(!updatedGyro) {
+if(gyro.update()) {
+updatedGyro = true;
+}
+}
+        </part>
+    </code>
+</component>

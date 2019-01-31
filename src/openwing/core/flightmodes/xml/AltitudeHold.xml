@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<flightmode name="%in_fm_ath_name" id="altitudehold" version="1" schemaversion="1">
+    <description>
+%in_fm_ath_desc
+    </description>
+    <requirements>
+        <component>gyro</component>
+        <component>baro</component>
+    </requirements>
+    <libraries>
+        <library>LittleMaths.h</library>
+        <library>PIDlib.h</library>
+    </libraries>
+    <regulator>
+        <pid name="athpitch" pval="0.4" ival="0.15" dval="0" minoutput="-1000" maxoutput="1000" period="0.05">%in_fm_ath_reg_pitch</pid>
+        <pid name="athroll" pval="0.25" ival="0.05" dval="0" minoutput="-1000" maxoutput="1000" period="0.05">%in_fm_ath_reg_roll</pid>
+    </regulator>
+    <parameters>
+        <parameter name="ath_pressure_sensitivity" defaultvalue="50" type="integer" units="">
+            <options>
+                <range minvalue="10" maxvalue="100" />
+            </options>
+            <description>
+%in_fm_ath_pressure_desc
+            </description>  
+        </parameter>
+    </parameters>
+    <code>
+        <part name="init">
+int32_t pressureTarget = baro.getPressure();
+        </part>
+        <part name="loop">
+baro_update();
+gyro_update();
+rx_update();
+gyro_getRPY();
+baro_getPressure();
+
+int16_t rollAngleTarget = map(rx_channels[rx_channel_roll], -1000, 1000, 2000, -2000);
+float targetPressureChange = map(rx_channels[rx_channel_pitch], -1000, 1000, 50, -50);
+pressureTarget += !inRange(targetPressureChange, -10, 10) ? (targetPressureChange * (((float)cyclePeriod) / 1000000)) : 0;
+int16_t rollAngleInput = angles[0];
+int16_t pitchAngleInput = angles[1];
+
+int16_t pitchAngleTarget = (pressure - pressureTarget)* ath_pressure_sensitivity; 
+
+int16_t rollOutput = athroll.calculate(rollAngleInput, rollAngleTarget);
+int16_t pitchOutput = athpitch.calculate(pitchAngleInput, pitchAngleTarget);
+
+servos_setAxis(rollOutput, pitchOutput);
+motor_setPower(rx_channels[rx_channel_throttle]);
+        </part>
+    </code>
+</flightmode>

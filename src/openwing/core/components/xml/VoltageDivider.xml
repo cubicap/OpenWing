@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="Voltage divider" id="exvolt" type="volt" version="1" schemaversion="1">
+    <description>
+Battery voltage sensor based on voltage divider. Not all cells have to be connected.
+    </description>
+    <connections>
+        <pin name="CELL1" type="analog" />
+        <pin name="CELL2" type="analog" />
+        <pin name="CELL3" type="analog" />
+        <pin name="CELL4" type="analog" />
+        <pin name="CELL5" type="analog" />
+        <pin name="CELL6" type="analog" />
+    </connections>
+    <parameters>
+        <parameter name="BATTERY_CELLS" defaultvalue="3" type="integer" units="">
+            <options>
+                <range minvalue="1" maxvalue="6" label="something" />
+            </options>
+            <description>
+%in_comp_volt_divider_param_cells
+            </description>
+        </parameter>
+    </parameters>
+    <libraries>
+        <library>BatteryMonitor.h</library>
+    </libraries>
+    <macros>
+        <macro name="volt_update">#define volt_update() {battery.getCellsVoltage(batteryVoltages);}</macro>
+        <macro name="volt_getVoltages">#define volt_getVoltages() {battery.getCellsVoltage(batteryVoltages);}</macro>
+    </macros>
+    <globalvariables>
+        <variable name="batteryVoltages">float batteryVoltages;</variable>
+        <variable name="batteryPins">int8_t batteryPins[6] = {CELL1, CELL2, CELL3, CELL4, CELL5, CELL6};</variable>
+    </globalvariables>
+    <functions>
+        
+    </functions>
+    <code>
+        
+    </code>
+</component>

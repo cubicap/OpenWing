@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<xsd:schema version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="component">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="description" type="xsd:string" />
+                <xsd:element name="connections" minOccurs="1" >
+                    <xsd:complexType>
+                        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                            <xsd:element name="spi" type="xsd:string" />
+                            <xsd:element name="i2c" type="xsd:string" />
+                            <xsd:element name="serial">
+                                <xsd:complexType>
+                                    <xsd:attribute name="allowUSBSerial" use="optional" default="false" >
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:enumeration value="true" />
+                                                <xsd:enumeration value="false" />
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:attribute>
+                                    <xsd:attribute name="name" use="required" type="xsd:string" />
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="pin">
+                                <xsd:complexType>
+                                    <xsd:attribute name="name" use="required" type="xsd:string" />
+                                    <xsd:attribute name="type" use="optional" default="any" >
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:enumeration value="pwm" />
+                                                <xsd:enumeration value="interrupt" />
+                                                <xsd:enumeration value="any" />
+                                                <xsd:enumeration value="analog" />
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:attribute>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:choice>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="parameters" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:all>
+                                        <xsd:element name="options">
+                                            <xsd:complexType>
+                                                <xsd:choice maxOccurs="unbounded">
+                                                    <xsd:element name="number" >
+                                                        <xsd:complexType>
+                                                            <xsd:attribute name="value" type="xsd:decimal" use="required" />
+                                                            <xsd:attribute name="label" type="xsd:string" />
+                                                        </xsd:complexType>
+                                                    </xsd:element>
+                                                    <xsd:element name="range">
+                                                       <xsd:complexType>
+                                                            <xsd:attribute name="minvalue" type="xsd:decimal" use="required" />
+                                                            <xsd:attribute name="maxvalue" type="xsd:decimal" use="required" />
+                                                            <xsd:attribute name="label" type="xsd:string" />
+                                                        </xsd:complexType>
+                                                    </xsd:element>
+                                                </xsd:choice>
+                                            </xsd:complexType>
+                                        </xsd:element>
+                                        <xsd:element name="description" type="xsd:string" />
+                                    </xsd:all>
+                                    <xsd:attribute name="name" type="xsd:string" use="required" />
+                                    <xsd:attribute name="defaultvalue" type="xsd:decimal" use="required" />
+                                    <xsd:attribute name="type" use="required">
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:enumeration value="decimal" />
+                                                <xsd:enumeration value="integer" />
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:attribute>
+                                    <xsd:attribute name="units" type="xsd:string" />
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="libraries" minOccurs="0" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="library" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="globalvariables" minOccurs="0" maxOccurs="1" >
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="variable" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:string">
+                                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="macros" minOccurs="0" maxOccurs="1" >
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="macro" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:string">
+                                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="functions" minOccurs="0" maxOccurs="1" >
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="function" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:all>
+                                        <xsd:element name="declaration" maxOccurs="1" />
+                                        <xsd:element name="definition" maxOccurs="1" />
+                                    </xsd:all>
+                                    <xsd:attribute name="name" type="xsd:string" use="required" />
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="code" minOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="part" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:string">
+                                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:all>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="id" type="xsd:string" use="required" />
+            <xsd:attribute name="type" type="xsd:string" use="required" />
+            <xsd:attribute name="version" type="xsd:string" use="required" />
+            <xsd:attribute name="schemaversion" type="xsd:string" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

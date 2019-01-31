@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="MS5611" id="ms5611" type="baro" version="1" schemaversion="1">
+    <description>
+        %in_co_ms5611_desc
+    </description>
+    <connections>
+        <spi></spi>
+    </connections>
+    <parameters></parameters>
+    <libraries>
+        <library>MS5611.h</library> 
+    </libraries>
+    <globalvariables>
+        <variable name="pressureTarget">int32_t pressureTarget;</variable>
+        <variable name="pressure">int32_t pressure;</variable>
+        <variable name="pressureStart">int32_t pressureStart;</variable>
+        <variable name="baro">MS5611 baro = MS5611();;</variable>
+    </globalvariables>
+    <macros>
+        <macro name="baro_update">#define baro_update() {baro.update();}</macro>
+        <macro name="baro_getPressure">#define baro_getPressure() {pressure = baro.getPressure();}</macro>
+    </macros>
+    <functions>
+    </functions>
+    <code>
+        <part name="setup">
+            baro.begin();
+            pressureStart = baro.getPressure();
+        </part>
+        <part name="init">
+for(int i = 0; i &lt; baro.pressureHistorySize; i++) {
+    baro.update();
+}
+        </part>
+    </code>
+</component>

@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 30.9.2018, 17:06:13
+    Author     : Petr
+*/
+.root {
+    -fx-base: #E6EAFF;
+    
+}
+
+ScrollPane {
+    -fx-background-color:transparent;
+}
+/*
+
+
+Accordion, AmbientLight, AnchorPane, Arc, AreaChart, Axis, BarChart, BorderPane, Box, BubbleChart, Button, ButtonBar, ButtonBase, Camera, Canvas, CategoryAxis, Cell, Chart, CheckBox, CheckBoxListCell, CheckBoxTableCell, CheckBoxTreeCell, CheckBoxTreeTableCell, CheckMenuItem, ChoiceBox, ChoiceBoxListCell, ChoiceBoxTableCell, ChoiceBoxTreeCell, ChoiceBoxTreeTableCell, Circle, ColorPicker, ComboBox, ComboBoxBase, ComboBoxListCell, ComboBoxTableCell, ComboBoxTreeCell, ComboBoxTreeTableCell, ContextMenu, Control, CubicCurve, CustomMenuItem, Cylinder, DateCell, DatePicker, DialogPane, Ellipse, FlowPane, GridPane, Group, HBox, HTMLEditor, Hyperlink, ImageView, IndexedCell, Label, Labeled, LightBase, Line, LineChart, ListCell, ListView, MediaView, Menu, MenuBar, MenuButton, MenuItem, MeshView, Node, NumberAxis, Pagination, Pane, ParallelCamera, Parent, PasswordField, Path, PerspectiveCamera, PieChart, PointLight, Polygon, Polyline, PopupControl, PopupControl.CSSBridge, ProgressBar, ProgressBarTableCell, ProgressBarTreeTableCell, ProgressIndicator, QuadCurve, RadioButton, RadioMenuItem, Rectangle, Region, ScatterChart, ScrollBar, ScrollPane, Separator, SeparatorMenuItem, Shape, Shape3D, Slider, Sphere, Spinner, SplitMenuButton, SplitPane, StackedAreaChart, StackedBarChart, StackPane, SubScene, SVGPath, SwingNode, Tab, TableCell, TableColumn, TableColumnBase, TableRow, TableView, TabPane, Text, TextArea, TextField, TextFieldListCell, TextFieldTableCell, TextFieldTreeCell, TextFieldTreeTableCell, TextFlow, TextInputControl, TilePane, TitledPane, ToggleButton, ToolBar, Tooltip, TreeCell, TreeTableCell, TreeTableColumn, TreeTableRow, TreeTableView, TreeView, ValueAxis, VBox, WebView, XYChart {
+    -fx-border-color: #f0f;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+
+ComboBox, Label, TextField, Button, CheckBox, ChoiceBox, DatePicker, Menu, MenuBar, MenuButton, MenuItem, ProgressBar, RadioButton, RadioMenuItem, ScrollBar, Separator, SeparatorMenuItem, Slider, Spinner, SplitMenuButton, Tab, Text, TextArea, TextField, ToggleButton {
+    -fx-border-color: #f00;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+Pane, VBox, HBox, FlowPane, GridPane, HBox, ScrollPane, SplitPane, StackPane, TabPane, VBox, WebView {
+    -fx-border-color: #00f;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+
+VBox {
+    -fx-border-color: #f00;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+
+GridPane {
+    -fx-border-color: #0f0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}/**/

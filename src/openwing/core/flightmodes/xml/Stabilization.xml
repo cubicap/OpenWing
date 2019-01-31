@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<flightmode name="%in_fm_stb_name" id="stabilization" version="1" schemaversion="1">
+    <description>
+        %in_fm_stb_desc
+    </description>
+    <requirements>
+        <component>gyro</component>
+    </requirements>
+    <parameters>
+        <parameter name="max_pitch_anglerate" defaultvalue="4000" type="integer" units="centidegree">
+            <options>
+                
+                <range minvalue="500" maxvalue="10000" />
+            </options>
+            <description></description>
+        </parameter>
+        <parameter name="max_roll_anglerate" defaultvalue="4000" type="integer" units="centidegree">
+            <options>
+                <range minvalue="500" maxvalue="10000" />
+            </options>
+            <description></description>
+        </parameter>
+    </parameters>
+    <libraries>
+        <library>LittleMaths.h</library>
+        <library>PIDlib.h</library>
+    </libraries>
+    <regulator>
+        <pid name="stbpitch" pval="0.4" ival="0.15" dval="0" minoutput="-1000" maxoutput="1000" period="0.05">%in_fm_stb_reg_roll</pid>
+        <pid name="stbroll" pval="0.25" ival="0.05" dval="0" minoutput="-1000" maxoutput="1000" period="0.05">%in_fm_stb_reg_roll</pid>
+    </regulator>
+    <code>
+        <part name="loop">
+gyro_getGYR();
+
+rx_update();
+
+int16_t rollTarget = map(rx_channels[rx_channel_roll], -1000, 1000, max_pitch_anglerate, -max_pitch_anglerate);
+int16_t pitchTarget = map(rx_channels[rx_channel_pitch], -1000, 1000, -max_roll_anglerate, max_roll_anglerate);
+
+int16_t rollInput = angleRates[0];
+int16_t pitchInput = angleRates[1];
+
+int16_t rollOutput = stbroll.calculate(rollInput, rollTarget);
+int16_t pitchOutput = stbpitch.calculate(pitchInput, pitchTarget);
+
+servos_setAxis(rollOutput, pitchOutput);
+motor_setPower(rx_channels[rx_channel_throttle]);
+        </part>
+    </code>
+</flightmode>
+
+

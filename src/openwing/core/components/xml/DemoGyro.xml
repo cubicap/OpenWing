@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="%demo_gyro_name" id="demogyro" type="gyro" version="1" schemaversion="1">
+    <description>
+%demo_gyro
+    </description>
+    <connections>
+        <pin name="INT" type="interrupt" />
+        <spi />
+    </connections>
+    <macros>
+        <macro name="gyro_update">#define gyro_update() {}</macro>
+        <macro name="gyro_getAngles">#define gyro_getAngles() {}</macro>
+        <macro name="gyro_getAngleRates">#define gyro_getAngleRates() {}</macro>
+        <macro name="gyro_getAccelerations">#define gyro_getAccelerations() {}</macro>
+        
+    </macros>
+    <globalvariables>
+        <variable name="angles">int16_t angles[3];</variable>
+        <variable name="angleRates">int16_t angleRates[3];</variable>
+        <variable name="accelerations">int16_t accelerations[3];</variable>
+    </globalvariables>
+    <code>
+        <part name="setup">
+//here would be setup of Demo gyro
+        </part>
+    </code>
+</component>

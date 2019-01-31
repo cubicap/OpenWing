@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="%in_co_servos_name" id="pwmservos" type="servos" version="1" schemaversion="1">
+    <description>
+        %in_co_servos_desc
+    </description>
+    <connections>
+        <pin name="LEFT" type="any" />
+        <pin name="RIGHT" type="any" />
+    </connections>
+    <parameters>
+        <parameter name="LEFT_SERVO_MIN" defaultvalue="1000" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_left_min_desc            
+            </description>
+        </parameter>
+        <parameter name="LEFT_SERVO_MIDDLE" defaultvalue="1500" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_left_mid_desc            
+            </description>
+        </parameter>
+        <parameter name="LEFT_SERVO_MAX" defaultvalue="2000" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_left_max_desc            
+            </description>
+        </parameter>
+        <parameter name="RIGHT_SERVO_MIN" defaultvalue="1000" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_right_min_desc            </description>
+        </parameter>
+        <parameter name="RIGHT_SERVO_MIDDLE" defaultvalue="1500" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_right_mid_desc            </description>
+        </parameter>
+        <parameter name="RIGHT_SERVO_MAX" defaultvalue="2000" type="integer" units="µs">
+            <options>
+                <range minvalue="0" maxvalue="3000" label="" />
+            </options>
+            <description>
+%in_co_servos_right_max_desc            </description>
+        </parameter>
+        <parameter name="INVERT_ROLL" defaultvalue="1" type="integer" units="µs">
+            <options>
+                <number value="1" label="Normal" />
+                <number value="-1" label="Inverted" />
+            </options>
+            <description>
+%in_co_servos_invert_roll_desc            </description>
+        </parameter>
+        <parameter name="INVERT_PITCH" defaultvalue="1" type="integer" units="µs">
+            <options>
+                <number value="1" label="Normal" />
+                <number value="-1" label="Inverted" />
+            </options>
+            <description>
+%in_co_servos_invert_pitch_desc
+            </description>
+        </parameter>
+    </parameters>
+    <libraries>
+        <library>Servo.h</library>
+    </libraries>
+    <macros>
+        
+    </macros>
+    <globalvariables>
+        <variable name="servoLeft">Servo servoLeft;</variable>
+        <variable name="servoRight">Servo servoRight;</variable>
+        <variable name="leftServoValue">int leftServoValue;</variable>
+        <variable name="rightServoValue">int rightServoValue;</variable>
+    </globalvariables>
+    <functions>
+        <function name="servos_setLeft">
+            <declaration>void servos_setLeft(int value);</declaration>
+            <definition>
+void servos_setLeft(int value) {
+    leftServoValue = map(((value &gt;= -1000) ? (value &lt;= 1000 ? value : 1000) : -1000), -1000, 0, LEFT_SERVO_MIN, LEFT_SERVO_MIDDLE);
+    servoLeft.writeMicroseconds(leftServoValue);
+}
+            </definition>
+        </function>
+        <function name="servos_setRight">
+            <declaration>void servos_setRight(int value);</declaration>
+            <definition>
+void servos_setRight(int value) {
+    rightServoValue = map(((value &gt;= -1000) ? (value &lt;= 1000 ? value : 1000) : -1000), -1000, 0, RIGHT_SERVO_MIN, RIGHT_SERVO_MIDDLE);
+    servoRight.writeMicroseconds(leftServoValue);
+}
+            </definition>
+        </function>
+        <function name="servos_setBoth">
+            <declaration>void servos_setBoth(int left, int right);</declaration>
+            <definition>
+void servos_setBoth(int left, int right) {
+    leftServoValue = map(((left &gt;= -1000) ? (left &lt;= 1000 ? left : 1000) : -1000), -1000, 0, LEFT_SERVO_MIN, LEFT_SERVO_MIDDLE);
+    rightServoValue = map(((right &gt;= -1000) ? (right &lt;= 1000 ? right : 1000) : -1000), -1000, 0, RIGHT_SERVO_MIN, RIGHT_SERVO_MIDDLE);
+    servoLeft.writeMicroseconds(leftServoValue);
+    servoRight.writeMicroseconds(rightServoValue);
+}
+            </definition>
+        </function>
+        <function name="servos_setAxis">
+            <declaration>void servos_setAxis(int roll, int pitch);</declaration>
+            <definition>
+void servos_setAxis(int roll, int pitch) {
+
+    int left = (pitch + roll * INVERT_ROLL) / 2;
+    int right = (pitch - roll * INVERT_ROLL) / 2;
+
+    leftServoValue = map(((left &gt;= -1000) ? (left &lt;= 1000 ? left : 1000) : -1000), -1000, 0, LEFT_SERVO_MIN, LEFT_SERVO_MIDDLE);
+    rightServoValue = map(((right &gt;= -1000) ? (right &lt;= 1000 ? right : 1000) : -1000), -1000, 0, RIGHT_SERVO_MIN, RIGHT_SERVO_MIDDLE);
+    servoLeft.writeMicroseconds(leftServoValue);
+    servoRight.writeMicroseconds(leftServoValue);
+}
+            </definition>
+        </function>
+    </functions>
+    <code>
+        <part name="setup">
+servoLeft.attach(LEFT);
+servoRight.attach(RIGHT);
+        </part>
+    </code>
+</component>

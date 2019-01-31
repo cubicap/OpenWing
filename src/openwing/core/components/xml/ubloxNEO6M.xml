@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2019 Petr Kubica
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<component name="Ublox NEO-6M" id="ubloxneo6m" type="gps" version="1" schemaversion="1">
+    <description>
+        %in_co_ubloxneo6m_desc
+    </description>
+    <connections>
+        <serial name="SERIAL" allowUSBSerial="false" />
+    </connections>
+    <parameters>
+        <parameter name="MIN_SATTELITES" defaultvalue="4" type="integer" units="">
+            <options>
+                <range minvalue="0" maxvalue="20" />
+            </options>
+            <description>
+%in_co_ubloxneo6m_minsat_desc
+            </description>
+        </parameter>
+    </parameters>
+    <libraries>
+        <library>TinyGPS++.h</library>
+    </libraries>
+    <macros>
+        <macro name="gps_update">
+#define gps_update() {
+while(GPS_SERIAL.available() &gt; 0) {
+    gps.encode((char)GPS_SERIAL.read());
+}}
+        </macro>
+        <macro name="gps_getLatitude">#define gps_getLatitude() {latitude = gps.location.lat();}</macro>
+        <macro name="gps_getLongitude">#define gps_getLongitude() {longitude = gps.location.lng();}</macro>
+        <macro name="gps_getSatelites">#define gps_getSatelites() {sattelites = gps.satellites.value();}</macro>
+    </macros>
+    <globalvariables>
+        <variable name="latitude">double latitude;</variable>
+        <variable name="longitude">double longitude;</variable>
+        <variable name="latitudeStart">double latitudeStart;</variable>
+        <variable name="longitudeStart">double longitudeStart;</variable>
+        <variable name="satelites">uint8_t satelites;</variable>
+        <variable name="gps">TinyGPSPlus gps;</variable>
+    </globalvariables>
+    <functions>
+        
+    </functions>
+    <code>
+        <part name="setup">
+SERIAL.setRX(RX);
+SERIAL.setTX(TX);
+SERIAL.begin(9600);
+while (gps.satellites.value() &lt;= MIN_SATTELITES) {delay (100);}         
+latitudeStart = gps.location.lat();
+longitudeStart = gps.location.lng();
+        </part>
+        <part name="delay">
+if(SERIAL.available() &gt; 0) {
+    gps.encode((char)SERIAL.read());
+}
+        </part>
+    </code>
+</component>
