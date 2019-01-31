@@ -18,6 +18,8 @@ Comes built-in with bare minimum to run working flight controller:
     - Fly-by-wire (holding angle)
     - Altitude hold
     - Return to home
+    
+Also includes some demonstration content to show its capabilities.
 ***
 Used libraries 
 - ControlsFX 8
