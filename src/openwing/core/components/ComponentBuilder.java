@@ -332,6 +332,7 @@ public class ComponentBuilder {
             System.out.println(file);
             Component comp = parse(getClass().getResourceAsStream(componentsPackageName + "xml/" + file));
             if(comp != null) {
+                comp.setSource(null);
                 components.add(comp);
             }
         }

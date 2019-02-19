@@ -51,6 +51,7 @@ public class PWMReceiver extends Component {
         
         setName("PWM Receiver");
         setId("PWMReceiver");
+        setSource(null);
         
         addFunction(new Function("rx_update", "void rx_update();", (
         "void rx_update() {\n" +

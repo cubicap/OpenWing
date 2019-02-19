@@ -16,6 +16,7 @@
  */
 package openwing.core;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ public class Buildable {
     List<Variable> finalVariables = new ArrayList<>();
     List<Macro> finalMacros = new ArrayList<>();
     Map<String, String> finalCode = new HashMap<>();
+    
+    URL source = null;
     
     public boolean addParameter(Parameter parameter) {
         boolean contains = false;
@@ -151,6 +154,14 @@ public class Buildable {
             }
         }
         return params;
+    }
+
+    public URL getSource() {
+        return source;
+    }
+
+    public void setSource(URL source) {
+        this.source = source;
     }
     
     public void complete() {

@@ -340,6 +340,7 @@ public class FlightModeBuilder {
             System.out.println(file);
             FlightMode fm = parse(getClass().getResourceAsStream(flightModesPackageName + "xml/" + file));
             if(fm != null) {
+                fm.setSource(null);
                 flightModes.add(fm);
             }
         }

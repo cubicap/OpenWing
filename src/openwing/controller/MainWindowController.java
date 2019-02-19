@@ -915,6 +915,23 @@ public class MainWindowController implements Initializable, SaveLoadAble {
 
     @Override
     public void save(SaveData data) {
+        List<Buildable> external = new ArrayList<>();
+        for(Component component : Main.dataBundle.getComponents()) {
+            if(component.getSource() != null) {
+                external.add(component);
+            }
+        }
+        for(FlightMode flightMode : Main.dataBundle.getFlightModes()) {
+            if(flightMode.getSource() != null) {
+                external.add(flightMode);
+            }
+        }
+        
+        for(int i = 0; i < external.size(); i++) {
+            Buildable b = external.get(i);
+            data.add("external_module_url_" + i, b.getSource().toString());
+        }
+        
         for(Map.Entry<String, Screen> screenEntry : screens.entrySet()) {
             if(screenEntry.getValue().getController() instanceof SaveLoadAble) {
                 ((SaveLoadAble)screenEntry.getValue().getController()).save(data);
@@ -932,6 +949,28 @@ public class MainWindowController implements Initializable, SaveLoadAble {
 
     @Override
     public void load(SaveData data) {
+        List<URL> externalUrls = new ArrayList<>();
+        
+        for(String key : data.getKeys()) {
+            if(key.startsWith("external_module_url_")) {
+                try {
+                    externalUrls.add(new URL(data.get(key)));
+                } catch (MalformedURLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        
+        for(URL url : externalUrls) {
+            XMLLoader loader = new XMLLoader(url, bundle);
+            Buildable b = loader.load();
+            if(b == null) {
+                System.out.println("null");
+                Alert a = new Alert(AlertType.ERROR, gis("fail_external_load") + ": " + url.toString() + "\n" + gis("moved_or_deleted"), ButtonType.OK);
+                a.showAndWait();
+            }
+        }
+        
         for(Map.Entry<String, Screen> screenEntry : screens.entrySet()) {
             if(screenEntry.getValue().getController() instanceof SaveLoadAble) {
                 ((SaveLoadAble)screenEntry.getValue().getController()).load(data);

@@ -85,11 +85,13 @@ public class XMLLoader {
                     case "component":
                         ComponentBuilder cb = new ComponentBuilder(rb);
                         b = cb.parse(source);
+                        b.setSource(source);
                         Main.dataBundle.addComponent((Component)b);
                         break;
                     case "flightmode":
                         FlightModeBuilder fmb = new FlightModeBuilder(rb);
                         b = fmb.parse(source);
+                        b.setSource(source);
                         Main.dataBundle.addFlightMode((FlightMode)b);
                         break;
                 }
@@ -107,6 +109,7 @@ public class XMLLoader {
             
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
+            return null;
         }
         return b;
     }

@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class SaveData {
@@ -44,6 +45,10 @@ public class SaveData {
     public String get(String key) {
         System.out.println("load - " + key + ": " + data.get(key));
         return data.get(key);
+    }
+    
+    public Set<String> getKeys() {
+        return data.keySet();
     }
     
     public boolean saveFile(File target) throws IOException {
