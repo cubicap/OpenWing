@@ -51,7 +51,6 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        hasPlatformIO = PlatformIO.checkPIO();
         
         homeFolder = new File(System.getProperty("user.home") + (System.getProperty("user.home").endsWith(File.separator) ? "" : File.separator) + "Documents" + File.separator + "OpenWing");
         
@@ -68,6 +67,8 @@ public class Main extends Application {
         rb = ResourceBundle.getBundle("openwing.resources.Strings", new Locale(locale));
         
         PlatformIO.setPlatformioPath(platformioPath);
+        
+        hasPlatformIO = PlatformIO.checkPIO();
         
         dataBundle = new DataBundle(rb);
         
@@ -98,8 +99,7 @@ public class Main extends Application {
             Thread.sleep(500);
             System.exit(0);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
     }
 

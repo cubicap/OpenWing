@@ -17,7 +17,7 @@ int LittleMaths::median(int* arr, int from, int to) {
     return median;
 }
 
-int LittleMaths::middleValueAverage(int* arr, int from, int to, int middleDistance) {
+int LittleMaths::middleValuesAverage(int* arr, int from, int to, int middleDistance) {
     int copySize = to - from;
     int* copy = new int[copySize];
     

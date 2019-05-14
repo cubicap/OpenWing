@@ -262,8 +262,8 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                 buildProgram();
             });
             MenuItem uploadOption = new MenuItem(gis("upload"));
-            if(Main.hasPlatformIO) {
-                uploadOption.setOnAction((ActionEvent event) -> {
+            uploadOption.setOnAction((ActionEvent event) -> {
+                if(Main.hasPlatformIO) {
                     File buildFolder = new File(tempDirectoryPath + "build");
                     if(buildFolder.exists()) {
                         deleteDirectory(buildFolder);
@@ -317,7 +317,6 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                                     }
                                     Thread.sleep(10);
                                 } catch (IOException | InterruptedException ex) {
-                                    ex.printStackTrace();
                                     return;
                                 }
                             }
@@ -342,20 +341,18 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                });
-            }
-            else {
-                uploadOption.setOnAction((event) -> {
+                }
+                else {
                     Alert a = new Alert(AlertType.ERROR, gis("pio_not_present"), ButtonType.OK);
                     a.showAndWait();
-                });
-            }
+                }
+            });
             deployMenu.getItems().add(uploadOption);
             deployMenu.getItems().add(buildOption);
         Menu toolsMenu = new Menu(gis("tools"));
             MenuItem pwmServosTuningOption = new MenuItem(gis("pwm_servos_tuning"));
-            if(Main.hasPlatformIO) {
-                pwmServosTuningOption.setOnAction((ActionEvent event) -> {
+            pwmServosTuningOption.setOnAction((ActionEvent event) -> {
+                if(Main.hasPlatformIO) {
                     Alert dialog = new Alert(AlertType.CONFIRMATION, gis("rewrite_settings_confirm"), ButtonType.YES, ButtonType.NO);
                     ButtonType result = dialog.showAndWait().get();
                     if(result == ButtonType.YES) {
@@ -412,7 +409,6 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                                         }
                                         Thread.sleep(10);
                                     } catch (IOException | InterruptedException ex) {
-                                        ex.printStackTrace();
                                         return;
                                     }
                                 }
@@ -438,14 +434,12 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                             ex.printStackTrace();
                         }
                     }
-                });
-            }
-            else {
-                pwmServosTuningOption.setOnAction((event) -> {
+                }
+                else {
                     Alert a = new Alert(AlertType.ERROR, gis("pio_not_present"), ButtonType.OK);
                     a.showAndWait();
-                });
-            }
+                }
+            });
             toolsMenu.getItems().add(pwmServosTuningOption);
         Menu optionsMenu = new Menu(gis("options"));
             Menu langSubMenu = new Menu(gis("language"));
@@ -477,67 +471,65 @@ public class MainWindowController implements Initializable, SaveLoadAble {
             Menu pioSubMenu = new Menu(gis("platformio"));
                 MenuItem pioHome = new MenuItem(gis("pio_settings"));
                 pioHome.setOnAction((ActionEvent event) -> {
-                    try {
-                        Process p = PlatformIO.runCommand(new File("."), "home");
-                        Alert a = new Alert(AlertType.INFORMATION, gis("pio_starting_settings"), ButtonType.CANCEL);
-                        Timer t = new Timer();
-                        t.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if(!p.isAlive()) {
-                                    Platform.runLater(() -> {
-                                        a.close();
-                                        t.cancel();
-                                    });
+                    if(Main.hasPlatformIO) {
+                        try {
+                            Process p = PlatformIO.runCommand(new File("."), "home");
+                            Alert a = new Alert(AlertType.INFORMATION, gis("pio_starting_settings"), ButtonType.CANCEL);
+                            Timer t = new Timer();
+                            t.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if(!p.isAlive()) {
+                                        Platform.runLater(() -> {
+                                            a.close();
+                                            t.cancel();
+                                        });
+                                    }
                                 }
-                            }
-                        }, 0, 100);
-                        a.show();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+                            }, 0, 100);
+                            a.show();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    else {
+                        Alert a = new Alert(AlertType.ERROR, gis("pio_not_present"), ButtonType.OK);
+                        a.showAndWait();
                     }
                 });
                 MenuItem pioPath = new MenuItem(gis("pio_path"));
-                if(Main.hasPlatformIO) {
-                    pioPath.setOnAction((ActionEvent event) -> {
-                        FileChooser fc = new FileChooser();
-                        File init = new File(PlatformIO.getPlatformioPath());
-                        if(init.exists()) {
-                            fc.setInitialDirectory(init);
+                pioPath.setOnAction((ActionEvent event) -> {
+                    FileChooser fc = new FileChooser();
+                    File init = new File(PlatformIO.getPlatformioPath());
+                    if(init.exists()) {
+                        fc.setInitialDirectory(init);
+                    }
+                    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlatformIO executable", "platformio.exe"));
+                    File target = fc.showOpenDialog(menuBar.getScene().getWindow());
+                    if(target != null && target.getPath().endsWith("platformio.exe")) {
+                        String path = target.getParent();
+                        if(!path.endsWith("/") && !path.endsWith("\\")) {
+                            path += File.separator;
                         }
-                        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlatformIO executable", "platformio.exe"));
-                        File target = fc.showOpenDialog(menuBar.getScene().getWindow());
-                        if(target != null && target.getPath().endsWith("platformio.exe")) {
-                            String path = target.getParent();
-                            if(!path.endsWith("/") && !path.endsWith("\\")) {
-                                path += File.separator;
+                        try {
+                            boolean result = PlatformIO.checkPIO(path);
+                            if(result) {
+                                Alert a = new Alert(AlertType.INFORMATION, gis("success_excl"), ButtonType.OK);
+                                a.showAndWait();
+                                PlatformIO.setPlatformioPath(path);
+                                openwing.Main.preferences.put("pio_path", path);
+                                openwing.Main.hasPlatformIO = true;
                             }
-                            try {
-                                boolean result = PlatformIO.checkPIO(path);
-                                if(result) {
-                                    Alert a = new Alert(AlertType.INFORMATION, gis("success_excl"), ButtonType.OK);
-                                    a.showAndWait();
-                                    PlatformIO.setPlatformioPath(path);
-                                    openwing.Main.preferences.put("pio_path", path);
-                                }
-                                else {
-                                    Alert a = new Alert(AlertType.ERROR, gis("pio_not_present_directory"), ButtonType.OK);
-                                    a.showAndWait();
-                                }
-                            } catch (NullPointerException ex) {
-                                ex.printStackTrace();
-                                Alert a = new Alert(AlertType.INFORMATION, gis("pio_not_present_directory"), ButtonType.OK);
+                            else {
+                                Alert a = new Alert(AlertType.ERROR, gis("pio_not_present_directory"), ButtonType.OK);
                                 a.showAndWait();
                             }
+                        } catch (NullPointerException ex) {
+                            Alert a = new Alert(AlertType.INFORMATION, gis("pio_not_present_directory"), ButtonType.OK);
+                            a.showAndWait();
                         }
-                    });
-                }
-                else {
-                    pioPath.setOnAction((event) -> {
-                        Alert a = new Alert(AlertType.ERROR, gis("pio_not_present"), ButtonType.OK);
-                        a.showAndWait();
-                    });
-                }
+                    }
+                });
                 pioSubMenu.getItems().add(pioPath);
                 pioSubMenu.getItems().add(pioHome);
                 
@@ -612,7 +604,7 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                 try {
                     serialPort.closePort();
                 } catch (SerialPortException ex) {
-                    ex.printStackTrace();
+                    
                 }
                 serialButton.setText(gis("connect"));
                 connected = false;
@@ -630,14 +622,14 @@ public class MainWindowController implements Initializable, SaveLoadAble {
                             try {
                                 ((TerminalTabPaneController)screens.get("terminal").getController()).getTerminal("serial").getController().write(serialPort.readString());
                             } catch (SerialPortException ex) {
-                                ex.printStackTrace();
+                                
                             }
                         }
                     });
                     connected = true;
                     serialButton.setText(gis("disconnect"));
                 } catch (SerialPortException ex) {
-                    ex.printStackTrace();
+                    
                 }
             }
         });

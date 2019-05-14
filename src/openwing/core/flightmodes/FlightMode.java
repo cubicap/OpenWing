@@ -86,7 +86,6 @@ public class FlightMode extends Buildable implements SaveLoadAble {
                 getFinalCode().put(part.getKey(), getFinalCode().containsKey(part.getKey()) ? 
                         (getFinalCode().get(part.getKey()) + "\n" + part.getValue()) : part.getValue());
             }
-        //todo tady nekde
         }
         
         for(Parameter parameter : getParameters()) {

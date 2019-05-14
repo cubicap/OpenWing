@@ -103,7 +103,6 @@ public class PlatformIO {
 
             return output.contains("PlatformIO");
         } catch (IOException ex) {
-            ex.printStackTrace();
             return false;
         }
     }
